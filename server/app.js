@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', async (req, res) => {
-    const rows = await dbPool.query('SELECT * FROM spaceData');
+    const rows = await dbPool.query('select * from ships;');
     res.status(200);
     res.send({
         result: JSON.stringify(rows)
