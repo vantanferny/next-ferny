@@ -4,10 +4,15 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+const fetchShipsFromAPI = require('./services/fetchShipsFromAPI');
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', async (req, res) => {
+    const ships = await fetchShipsFromAPI();
+    console.log(ships)
+
     const rows = await dbPool.query('select * from ships;');
     res.status(200);
     res.send({
