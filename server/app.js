@@ -4,14 +4,13 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const fetchShipsFromAPI = require('./services/fetchShipsFromAPI');
+// to be called every 24 hours / if not in cache
+// const loadShipsFromAPIToDatabase = require('./services/loadShipsFromAPIToDatabase');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', async (req, res) => {
-    const ships = await fetchShipsFromAPI();
-    console.log(ships)
 
     const rows = await dbPool.query('select * from ships;');
     res.status(200);

@@ -34,6 +34,7 @@ const parseShip = (unparsedShip) => {
     type: unparsedShip.type,
     weight: unparsedShip.mass_kg,
     port: unparsedShip.home_port,
+    name: unparsedShip.name,
     class: unparsedShip.class,
   }
 }
