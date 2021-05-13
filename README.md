@@ -4,7 +4,7 @@ Client:\
 [ ✅ ] Basic UI \
 [ ✅ ] Sanitation \
 [ ✅ ] Validation \
-[ ] Pagination \
+[ ✅ ] Pagination \
 [ ] Upload function
 
 Server: \
@@ -13,6 +13,6 @@ Server: \
 [ ✅ ] Ships table creation \
 [ ✅ ] Ships table population \
 [ ✅ ] Cron job \
+[ ✅ ] Pagination \
 [ ] Security \
-[ ] Pagination \
 [ ] Cache
