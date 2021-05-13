@@ -7,8 +7,8 @@ const cron = require('node-cron');
 const app = express();
 
 const everyMidnight = '0 0 * * *'
-cron.schedule(everyMidnight, () => {
-  services.loadShipsFromAPIToDatabase()
+cron.schedule(everyMidnight, async () => {
+  await services.loadShipsFromAPIToDatabase()
 });
 
 app.use(bodyParser.json());
@@ -31,7 +31,12 @@ app.get('/ships', async (req, res) => {
   }
 
   const query = `SELECT * FROM ships ${services.formQueryWhereClause(req.query)};`
-  const rows = await dbPool.query(query);
+  let rows = await dbPool.query(query);
+
+  if (rows.length === 0) {
+    await services.loadShipsFromAPIToDatabase()
+    rows = await dbPool.query(query);
+  }
 
   res.status(200);
   res.send({
