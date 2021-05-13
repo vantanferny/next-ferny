@@ -3,7 +3,7 @@ Checklist:
 Client:\
 [ ✅ ] Basic UI \
 [ ✅ ] Sanitation \
-[ ] Validation \
+[ ✅ ] Validation \
 [ ] Pagination \
 [ ] Upload function
 
@@ -12,7 +12,7 @@ Server: \
 [ ✅ ] Validation \
 [ ✅ ] Ships table creation \
 [ ✅ ] Ships table population \
-[ ] Cron job \
+[ ✅ ] Cron job \
 [ ] Security \
 [ ] Pagination \
 [ ] Cache
