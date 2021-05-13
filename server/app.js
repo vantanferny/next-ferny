@@ -18,13 +18,8 @@ app.use(function (_, res, next) {
     next();
 });
 
-app.get('/', async (req, res) => {
+app.get('/ships', async (req, res) => {
     const query = `SELECT * FROM ships ${whereClause(req.query)};`
-
-    console.log('------------s')
-    console.log(query)
-    console.log('------------e')
-
     const rows = await dbPool.query(query);
 
     res.status(200);
@@ -36,10 +31,10 @@ const whereClause = (params) => {
         return ''
     }
 
-    let clause = 'WHERE '
+    let clause = 'WHERE'
 
     Object.keys(params).forEach(function(key) {
-        clause += `${key} = '${params[key]}' AND`
+        clause += ` ${key} = '${params[key]}' AND`
     })
 
     return clause.slice(0, -4) // remove last " AND"

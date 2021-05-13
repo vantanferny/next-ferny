@@ -20,7 +20,7 @@
         <p class="field-label">Ship type</p>
         <!-- Possibly get all ship type options from db endpoint -->
         <select id="select-ships">
-          <option disabled selected value> -- select an option -- </option>
+          <option selected value> -- select an option -- </option>
           <option value="Tug">Tug</option>
           <option value="Cargo">Cargo</option>
           <option value="Barge">Barge</option>
@@ -29,11 +29,11 @@
       </div>
       <div class="field-container">
         <p class="field-label">Weight</p>
-        <input class="input-text-field" type=text>
+        <input class="input-text-field" id="input-weight" type=text>
       </div>
       <div class="field-container">
         <p class="field-label">Home port</p>
-        <input class="input-text-field" type=text>
+        <input class="input-text-field" id="input-port" type=text>
       </div>
       <div class="field-container">
         <button id="btn-search">Search</button>
@@ -71,7 +71,17 @@
       params['type'] = shipTypeFilter
     }
 
-    $.get("http://localhost:4000", params, function( ships ) {
+    const weightFilter = $('#input-weight').val()
+    if (weightFilter.length > 0) {
+      params['weight'] = weightFilter
+    }
+
+    const portFilter = $('#input-port').val()
+    if (portFilter.length > 0) {
+      params['port'] = portFilter
+    }
+
+    $.get("http://localhost:4000/ships", params, function( ships ) {
       $('tbody').empty()
 
       displayShips(ships)
