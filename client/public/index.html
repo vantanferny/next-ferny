@@ -73,18 +73,22 @@
 
     const weightFilter = $('#input-weight').val()
     if (weightFilter.length > 0) {
-      params['weight'] = weightFilter
+      params['weight'] = weightFilter.trim()
     }
 
     const portFilter = $('#input-port').val()
     if (portFilter.length > 0) {
-      params['port'] = portFilter
+      params['port'] = portFilter.trim()
     }
 
-    $.get("http://localhost:4000/ships", params, function( ships ) {
+    $.get("http://localhost:4000/ships", params, function( response ) {
       $('tbody').empty()
 
-      displayShips(ships)
+      if (response.error) {
+        alert(`An error occured: ${response.error}`)
+      } else {
+        displayShips(response.data)
+      }
     });
   }
 
@@ -104,7 +108,6 @@
       $('tbody').append(row)
     });
   }
-
 </script>
 
 </html>
