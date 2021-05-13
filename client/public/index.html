@@ -18,10 +18,13 @@
     <div id="command-center-container">
       <div class="field-container">
         <p class="field-label">Ship type</p>
-        <!-- Possibly get all ships from db endpoint -->
+        <!-- Possibly get all ship type options from db endpoint -->
         <select id="select-ships">
           <option disabled selected value> -- select an option -- </option>
-          <option value="ship_a">Ship A</option>
+          <option value="Tug">Tug</option>
+          <option value="Cargo">Cargo</option>
+          <option value="Barge">Barge</option>
+          <option value="High Speed Craft">High Speed Craft</option>
         </select>
       </div>
       <div class="field-container">
@@ -33,7 +36,7 @@
         <input class="input-text-field" type=text>
       </div>
       <div class="field-container">
-        <button>Search</button>
+        <button id="btn-search">Search</button>
       </div>
     </div>
     <div id="ships-table-container">
@@ -56,8 +59,27 @@
 </body>
 
 <script>
-  $.get("http://localhost:4000", function( response ) {
-    $(response).each(function(_, ship) {
+  $('#btn-search').click(function() {
+    fetchShips()
+  })
+
+  const fetchShips = () => {
+    const params = {}
+
+    const shipTypeFilter = $('#select-ships').val()
+    if (shipTypeFilter) {
+      params['type'] = shipTypeFilter
+    }
+
+    $.get("http://localhost:4000", params, function( ships ) {
+      $('tbody').empty()
+
+      displayShips(ships)
+    });
+  }
+
+  const displayShips = (ships) => {
+    $(ships).each(function(_, ship) {
       const row = `
         <tr>
           <td>${ship.type}</td>
@@ -71,7 +93,8 @@
 
       $('tbody').append(row)
     });
-  });
+  }
+
 </script>
 
 </html>
