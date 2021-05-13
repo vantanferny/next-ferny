@@ -5,6 +5,7 @@ const services = require('./services');
 const cron = require('node-cron');
 
 const app = express();
+const PAGINATION_LIMIT = 5
 
 const everyMidnight = '0 0 * * *'
 cron.schedule(everyMidnight, async () => {
@@ -30,17 +31,24 @@ app.get('/ships', async (req, res) => {
     return;
   }
 
-  const query = `SELECT * FROM ships ${services.formQueryWhereClause(req.query)};`
-  let rows = await dbPool.query(query);
+  const query = `
+    SELECT * FROM ships
+    ${services.formQueryWhereClause(req.query)}
+    LIMIT ${PAGINATION_LIMIT} OFFSET ${req.query.offset};`
 
+  let rows = await dbPool.query(query);
   if (rows.length === 0) {
     await services.loadShipsFromAPIToDatabase()
     rows = await dbPool.query(query);
   }
 
+  const rawCountResult = await dbPool.query(`SELECT COUNT(*) AS total FROM ships ${services.formQueryWhereClause(req.query)};`);
+  const numberOfPages = Math.ceil(rawCountResult[0].total / PAGINATION_LIMIT)
+
   res.status(200);
   res.send({
-    data: rows
+    data: rows,
+    pages: numberOfPages
   });
 });
 

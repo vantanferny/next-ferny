@@ -6,6 +6,8 @@ const formQueryWhereClause = (params) => {
   let clause = 'WHERE'
 
   Object.keys(params).forEach(function(key) {
+    if (key == 'offset') { return } // offset param is for pagination only
+
     clause += ` ${key} = '${params[key]}' AND`
   })
 
