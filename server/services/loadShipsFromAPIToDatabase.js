@@ -2,11 +2,16 @@ const fetchShipsFromAPI = require('./fetchShipsFromAPI')
 const dbPool = require('../db');
 
 const loadShipsFromAPIToDatabase = async () => {
+  await purgeShipsInDatabase();
   const ships = await fetchShipsFromAPI();
 
   for (const ship of ships) {
-    const insert = await insertShipToDatabase(ship) // verify if unused variable is really needed
+    await insertShipToDatabase(ship)
   }
+}
+
+const purgeShipsInDatabase = async () => {
+  await dbPool.query('DELETE FROM ships;')
 }
 
 const insertShipToDatabase = async (ship) => {

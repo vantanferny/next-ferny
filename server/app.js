@@ -2,40 +2,41 @@ const dbPool = require('./db');
 const express =require('express');
 const bodyParser = require('body-parser');
 const services = require('./services');
-
-// use it before all route definitions
+const cron = require('node-cron');
 
 const app = express();
 
-// to be called every 24 hours / if not in cache
-// const loadShipsFromAPIToDatabase = require('./services/loadShipsFromAPIToDatabase');
+const everyMidnight = '0 0 * * *'
+cron.schedule(everyMidnight, () => {
+  services.loadShipsFromAPIToDatabase()
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(function (_, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
 
-    next();
+  next();
 });
 
 app.get('/ships', async (req, res) => {
-    const validationResult = services.validateRequest(req.query)
-    if (!validationResult.success) {
-        res.send({
-            error: validationResult.error
-        });
-
-        return;
-    }
-
-    const query = `SELECT * FROM ships ${services.formQueryWhereClause(req.query)};`
-    const rows = await dbPool.query(query);
-
-    res.status(200);
+  const validationResult = services.validateRequest(req.query)
+  if (!validationResult.success) {
     res.send({
-        data: rows
+      error: validationResult.error
     });
+
+    return;
+  }
+
+  const query = `SELECT * FROM ships ${services.formQueryWhereClause(req.query)};`
+  const rows = await dbPool.query(query);
+
+  res.status(200);
+  res.send({
+    data: rows
+  });
 });
 
 app.listen('4000');
